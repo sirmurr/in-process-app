@@ -4,7 +4,8 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_DB: poke_store
+      #POSTGRES_DB: poke_store
+      POSTGRES_DB: accounts
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker
     ports:
@@ -24,4 +25,5 @@ services:
       DATABASE_HOST: db
       DATABASE_USER: postgres
       DATABASE_PASSWORD: docker
-      DATABASE_NAME: poke_store
+      #DATABASE_NAME: poke_store
+      DATABASE_NAME: accounts
