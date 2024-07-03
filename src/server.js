@@ -1,10 +1,7 @@
 const express = require("express");
+const knex = require("knex")(require("./knexfile").development);
 const app = express();
 const port = 3000;
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.use(express.json());
 
@@ -12,15 +9,15 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-// temp in-memory 'db' until real db is integerated
-let users = [];
-let tasks = [];
+app.get("/", (req, res) => {
+  res.send("Application up and running!");
+});
 
-//// USERS TABLE CRUD ////
+//// USERS TABLE CRUD ////-----------------------------------------------------------------------------------------------------
 //id, isNewMember, isAppAdmin, isTaskAdmin, isLeadership, Member Name, Member Email, isInProcessed
 
 // Create a User: POST /users
-app.post("/users", (req, res) => {
+app.post("/users", async (req, res) => {
   //Logic to add a user
   const {
     isNewMember,
@@ -35,47 +32,55 @@ app.post("/users", (req, res) => {
   if (!memberName || !memberEmail) {
     return res.status(400).send("Missing User Name or Email");
   }
-
   //ACTION add additional data validation
 
-  const newUser = {
-    id: users.length + 1,
-    isNewMember,
-    isAppAdmin,
-    isTaskAdmin,
-    isLeadership,
-    memberName,
-    memberEmail,
-    isInProcessed,
-  };
+  try {
+    const [newUser] = await knex("users")
+      .insert({
+        isNewMember,
+        isAppAdmin,
+        isTaskAdmin,
+        isLeadership,
+        memberName,
+        memberEmail,
+        isInProcessed,
+      })
+      .returning("*");
 
-  users.push(newUser);
-  res.status(201).send(newUser);
+    res.status(201).send(newUser);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 // Get All Users: GET /users
-app.get("/users", (req, res) => {
+app.get("/users", async (req, res) => {
   // Logic to get all users
-  res.json(users);
+  try {
+    const users = await knex("users").select("*");
+    res.json(users);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 // Get a Single User: GET /users/:id
-app.get("/users/:id", (req, res) => {
+app.get("/users/:id", async (req, res) => {
   // Logic to get a single user
-  const user = users.find((u) => u.id === parseInt(req.params.id));
-  if (!user) {
-    return res.status(404).send("User not found");
+  try {
+    const user = await knex("users").where("id", req.params.id).first();
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 
 // Update a Book: PUT /users/:id
-app.put("/users/:id", (req, res) => {
+app.put("/users/:id", async (req, res) => {
   // Logic to update a user
-  const user = users.find((u) => u.id === parseInt(req.params.id));
-  if (!user) {
-    return res.status(404).send("User not found");
-  }
-
   const {
     isNewMember,
     isAppAdmin,
@@ -86,36 +91,52 @@ app.put("/users/:id", (req, res) => {
     isInProcessed,
   } = req.body;
 
-  user.isNewMember = isNewMember || user.isNewMember;
-  user.isAppAdmin = isAppAdmin || user.isAppAdmin;
-  user.isTaskAdmin = isTaskAdmin || user.isTaskAdmin;
-  user.isLeadership = isLeadership || user.isLeadership;
-  user.memberName = memberName || user.memberName;
-  user.memberEmail = memberEmail || user.memberEmail;
-  user.isInProcessed = isInProcessed || user.isInProcessed;
+  try {
+    const updatedUser = await knex("users")
+      .where("id", req.params.id)
+      .update({
+        isNewMember,
+        isAppAdmin,
+        isTaskAdmin,
+        isLeadership,
+        memberName,
+        memberEmail,
+        isInProcessed,
+      })
+      .returning("*");
 
-  res.send(book);
+    if (!updatedUser.length) {
+      return res.status(404).send("User not found");
+    }
+
+    res.json(updatedUser[0]);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 // Delete a Book: DELETE /users/:id
-app.delete("/users/:id", (req, res) => {
+app.delete("/users/:id", async (req, res) => {
   // Logic to delete a user
-  const userIndex = users.findIndex((u) => u.id === pasreInt(req.params.id));
-  if (userIndex === -1) {
-    return res.status(404).send("User not found");
+  try {
+    const deleted = await knex("users").where("id", req.params.id).del();
+    if (!deleted) {
+      return res.status(404).send("User not found");
+    }
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send(error.message);
   }
-
-  tasks.splice(userIndex, 1);
-  res.status(204).send();
 });
 
-//// TASKS TABLE CRUD ////
+//// TASKS TABLE CRUD ////-------------------------------------------------------------------------------------------------------------------
 //id, Task Name, Task Details, Task Admin
 
 // Create a Task: POST /tasks
-app.post("/tasks", (req, res) => {
-  //Logic to add a tasks
+app.post("/tasks", async (req, res) => {
+  //Logic to add a user
   const { taskName, taskDetail, taskAdmin, taskPriority } = req.body;
+
   if (!taskName || !taskDetail) {
     return res.status(400).send("Missing Task Name or Details");
   }
@@ -130,62 +151,90 @@ app.post("/tasks", (req, res) => {
       .send("Missing Task Priority. Enter as number of days after arrival.");
   }
 
-  const newTask = {
-    id: tasks.length + 1,
-    taskName,
-    taskDetail,
-    idTaskAdmin,
-    taskPriority,
-  };
-  tasks.push(newTask);
-  res.status(201).send(newTask);
+  try {
+    const [newTask] = await knex("tasks")
+      .insert({
+        taskName,
+        taskDetail,
+        idTaskAdmin,
+        taskPriority,
+      })
+      .returning("*");
+
+    res.status(201).send(newTask);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 // Get All Tasks: GET /tasks
-app.get("/tasks", (req, res) => {
+app.get("/tasks", async (req, res) => {
   // Logic to get all tasks
-  res.json(tasks);
+  try {
+    const tasks = await knex("tasks").select("*");
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 // Get a Single Task: GET /tasks/:id
-app.get("/tasks/:id", (req, res) => {
+app.get("/tasks/:id", async (req, res) => {
   // Logic to get a single task
-  const task = tasks.find((t) => t.id === parseInt(req.params.id));
-  if (!task) {
-    return res.status(404).send("Task not found");
+  try {
+    const task = await knex("tasks").where("id", req.params.id).first();
+    if (!task) {
+      return res.status(404).send("User not found");
+    }
+    res.json(task);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 
 // Update a Task: PUT /tasks/:id
-app.put("/tasks/:id", (req, res) => {
+app.put("/tasks/:id", async (req, res) => {
   // Logic to update a task
-  const task = tasks.find((t) => t.id === parseInt(req.params.id));
-  if (!task) {
-    return res.status(404).send("Task not found");
-  }
-
   const { taskName, taskDetail, taskAdmin, taskPriority } = req.body;
 
-  task.taskName = taskName || task.taskName;
-  task.taskDetail = taskDetail || task.taskDetail;
-  task.taskAdmin = taskAdmin || task.taskAdmin;
-  taskPriority = taskPriority || task.taskPriority;
+  try {
+    const updatedTask = await knex("tasks")
+      .where("id", req.params.id)
+      .update({
+        taskName,
+        taskDetail,
+        taskAdmin,
+        taskPriority,
+      })
+      .returning("*");
 
-  res.send(task);
-});
+    if (!updatedTask.length) {
+      return res.status(404).send("Task not found");
+    }
 
-// Delete a Task: DELETE /tasks/:id
-app.delete("/tasks/:id", (req, res) => {
-  // Logic to delete a task
-  const taskIndex = tasks.findIndex((t) => t.id === pasreInt(req.params.id));
-  if (taskIndex === -1) {
-    return res.status(404).send("Task not found");
+    res.json(updatedTask[0]);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
-
-  tasks.splice(taskIndex, 1);
-  res.status(204).send();
 });
 
+//NEED TO KNEXIFY
+// Delete a Task: DELETE /tasks/:id
+app.delete("/tasks/:id", async (req, res) => {
+  // Logic to delete a task
+  try {
+    const deleted = await knex("tasks").where("id", req.params.id).del();
+    if (!deleted) {
+      return res.status(404).send("Task not found");
+    }
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+/* JOINED Table UNDER  CONSTRUCTION ------------------------------------------------------------------------------------------------------
+//NEED TO KNEXIFY
 //// Joined task assignment table ////
 //id, idMember, idTask, isComplete
 app.post("/assignments", (req, res) => {
@@ -215,3 +264,4 @@ app.put("/assignments/:id", (req, res) => {
   //Logic to update the isComplete flag
 });
 //  - research this
+*/
