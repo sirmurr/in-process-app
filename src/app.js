@@ -1,26 +1,25 @@
-const express = require('express');
+const express = require("express");
+//const knex = require("knex")(require("../knexfile.js").development);
+
 const app = express();
 const port = 8081;
 
-const knex = require('knex')(require('../knexfile.js').development);
+const knex = require('knex')(require('../knexfile.js')["development"])
 
-app.get('/', (request, response) => {
-  response.send('Application up and running.');
+app.get('/', (request, respond) => {
+  respond.send('Application up and running.')
 });
 
-app.get('/pokemons', (request, response) => {
-  knex('poke')
-    .select('*')
-    .then(pokemons => {
-      const pokemonNames = pokemons.map(pokemon => pokemon.name);
-      response.json(pokemonNames);
-    })
-    .catch(err => {
-      console.error(err);
-      response.status(500).json({ error: 'Failed to fetch pokemons' });
-    });
-});
 
 app.listen(port, () => {
   console.log('Your Knex and Express application are running successfully');
-});
+})
+
+app.get('/inprocesss', (request, response) => {
+    knex('inprocess')
+      .select('*')
+      .then(inprocesss => {
+        var inprocessNames = inprocesss.map(inprocess => inprocess.name)
+        response.json(inprocessNames);
+      })
+})
