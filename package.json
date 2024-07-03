@@ -1,6 +1,7 @@
 {
-  "name": "inprocess",
+  "name": "sdi-blended-workshop-databases-scaffold",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon ./src/app.js",
@@ -15,6 +16,5 @@
     "knex": "^3.1.0",
     "nodemon": "^3.1.4",
     "pg": "^8.12.0"
-  },
-  "description": ""
+  }
 }
