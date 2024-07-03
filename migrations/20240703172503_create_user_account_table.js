@@ -1,3 +1,7 @@
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
 exports.up = function(knex) {
   return knex.schema.createTable('user_account', table => {
     table.increments('id').primary();
@@ -5,12 +9,16 @@ exports.up = function(knex) {
     table.boolean('isAppAdmin');
     table.boolean('isTaskAdmin');
     table.boolean('isLeadership');
-    table.string('member_name');
-    table.string('member_email');
+    table.string('MemberName');
+    table.string('MemberEmail');
     table.boolean('isInProcessed');
   });
 };
 
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
 exports.down = function(knex) {
-  return knex.schema.dropTable('user_account');
+  return knex.schema.dropTableIfExists('user_account');
 };

@@ -17,6 +17,7 @@ COPY . .
 EXPOSE 8081
 
 # Install nodemon globally
+RUN npm install -g knex
 RUN npm install -g nodemon
 
 # Run the application

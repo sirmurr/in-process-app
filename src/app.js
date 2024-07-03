@@ -1,25 +1,28 @@
-const express = require("express");
-//const knex = require("knex")(require("../knexfile.js").development);
+const express = require('express');
+const knex = require('knex')(require('../knexfile.js').development);
 
 const app = express();
 const port = 8081;
 
-const knex = require('knex')(require('../knexfile.js')["development"])
+app.use(express.json());
 
-app.get('/', (request, respond) => {
-  respond.send('Application up and running.')
+app.get('/', (req, res) => {
+  res.send('Application up and running.');
 });
 
+app.get('/inprocesss', (req, res) => {
+  knex('user_account')
+    .select('*')
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
+});
 
 app.listen(port, () => {
   console.log('Your Knex and Express application are running successfully');
-})
+});
 
-app.get('/inprocesss', (request, response) => {
-    knex('inprocess')
-      .select('*')
-      .then(inprocesss => {
-        var inprocessNames = inprocesss.map(inprocess => inprocess.name)
-        response.json(inprocessNames);
-      })
-})
+module.exports = app;

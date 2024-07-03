@@ -13,6 +13,12 @@ module.exports = {
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       port: 5432
+    },
+    migrations: {
+      directory: './migrations'
+    },
+    seeds: {
+      directory: './seeds'
     }
   },
 
