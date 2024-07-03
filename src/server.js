@@ -10,10 +10,12 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-//// USERS TABLE CRUD ////
 // temp in-memory 'db' until real db is integerated
 let users = [];
 let tasks = [];
+
+//// USERS TABLE CRUD ////
+//id, isNewMember, isAppAdmin, isTaskAdmin, isLeadership, Member Name, Member Email, isInProcessed
 
 // Create a User: POST /users
 app.post("/users", (req, res) => {
@@ -40,7 +42,9 @@ app.delete("/users/:id", (req, res) => {
   // Logic to delete a user
 });
 
-// //// TASKS TABLE CRUD ////
+//// TASKS TABLE CRUD ////
+//id, Task Name, Task Details, Task Admin
+
 // Create a Task: POST /tasks
 app.post("/tasks", (req, res) => {
   //Logic to add a tasks
@@ -67,20 +71,6 @@ app.delete("/tasks/:id", (req, res) => {
 });
 
 //// Joined task assignment table ////
-//  - research this
-
-//CRUD Routing for 3 tables in DB
-// User Account
-//id, isNewMember, isAppAdmin, isTaskAdmin, isLeadership, Member Name, Member Email, isInProcessed
-//In-Processing Task
-//id, Task Name, Task Details, Task Admin
-//Member - Task Assignment
 //id, idMember, idTask, isComplete
 
-// app.get('/user')
-
-// app,post('/user')
-
-// app.put('/user')
-
-// app.
+//  - research this
