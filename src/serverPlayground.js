@@ -266,7 +266,7 @@ app.post("/assignments", async (req, res) => {
   }
 });
 
-// NEW needs testing
+// Put isComplete Assignment Flag: Put /assignments/:id
 app.put("/assignments/:id", async (req, res) => {
   //Logic to update the isComplete flag
 
@@ -289,4 +289,46 @@ app.put("/assignments/:id", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-//  - research this
+
+// Get All Assignments: GET /assignments
+app.get("/assignments", async (req, res) => {
+  // Logic to get all assignments
+  try {
+    const assignments = await knex("member_task_assignment").select("*");
+    res.json(assignments);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Get a Single assignment: GET /assignments/:id
+app.get("/assignments/:id", async (req, res) => {
+  // Logic to get a single assignment
+  try {
+    const assignment = await knex("member_task_assignment")
+      .where("id", req.params.id)
+      .first();
+    if (!assignment) {
+      return res.status(404).send("Assignment not found");
+    }
+    res.json(assignment);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Delete a assignment: DELETE /assignments/:id
+app.delete("/assignments/:id", async (req, res) => {
+  // Logic to delete a assignment
+  try {
+    const deleted = await knex("member_task_assignment")
+      .where("id", req.params.id)
+      .del();
+    if (!deleted) {
+      return res.status(404).send("Assignment not found");
+    }
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
