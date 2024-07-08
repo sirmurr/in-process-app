@@ -10,14 +10,25 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <Login />
+    <div>
+      <h1>My app</h1>
+      <ul>
+        <li>
+          <Link to="/">Login</Link>
+        </li>
+        <li>
+          <Link to="/app-admin">App Admin</Link>
+        </li>
+        <li>
+          <Link to="/leadership">Leadership</Link>
+        </li>
+      </ul>
 
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/app-admin" element={<AppAdmin />} />
-        <Route path="/new-member/:id" element={<NewMember />} />
-        <Route path="/task-admin/:id" element={<TaskAdmin />} />
+        <Route path="/appadmin" element={<AppAdmin />} />
+        <Route path="/newmember/:id" element={<NewMember />} />
+        <Route path="/taskadmin/:id" element={<TaskAdmin />} />
         <Route path="/leadership" element={<Leadership />} />
       </Routes>
     </div>
