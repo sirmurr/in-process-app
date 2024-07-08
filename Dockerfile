@@ -2,7 +2,7 @@
 FROM node:14
 
 # Create and change to the app directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/server
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -21,4 +21,4 @@ RUN npm install -g knex
 RUN npm install -g nodemon
 
 # Run the application
-CMD ["nodemon", "./src/app.js"]
+CMD ["nodemon", "./src/server.js"]
