@@ -152,7 +152,7 @@ app.post("/in_processing_task", async (req, res) => {
   }
 
   try {
-    const [newTask] = await knex("tain_processing_tasksks")
+    const [newTask] = await knex("in_processing_task")
       .insert({
         taskName,
         taskDetail,
