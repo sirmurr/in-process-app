@@ -133,7 +133,7 @@ app.delete("/user_account/:id", async (req, res) => {
 //id, Task Name, Task Details, Task Admin
 
 // Create a Task: POST /tasks
-app.post("/in_processing_task", async (req, res) => {
+app.post("/tasks", async (req, res) => {
   //Logic to add a user
   const { taskName, taskDetail, taskAdmin, taskPriority } = req.body;
 
@@ -168,7 +168,7 @@ app.post("/in_processing_task", async (req, res) => {
 });
 
 // Get All Tasks: GET /tasks
-app.get("/in_processing_task", async (req, res) => {
+app.get("/tasks", async (req, res) => {
   // Logic to get all tasks
   try {
     const tasks = await knex("in_processing_task").select("*");
@@ -179,7 +179,7 @@ app.get("/in_processing_task", async (req, res) => {
 });
 
 // Get a Single Task: GET /tasks/:id
-app.get("/in_processing_task/:id", async (req, res) => {
+app.get("/tasks/:id", async (req, res) => {
   // Logic to get a single task
   try {
     const task = await knex("in_processing_task")
@@ -195,7 +195,7 @@ app.get("/in_processing_task/:id", async (req, res) => {
 });
 
 // Update a Task: PUT /tasks/:id
-app.put("/in_processing_task/:id", async (req, res) => {
+app.put("/tasks/:id", async (req, res) => {
   // Logic to update a task
   const { taskName, taskDetail, taskAdmin, taskPriority } = req.body;
 
@@ -222,7 +222,7 @@ app.put("/in_processing_task/:id", async (req, res) => {
 
 //NEED TO KNEXIFY
 // Delete a Task: DELETE /tasks/:id
-app.delete("/in_processing_task/:id", async (req, res) => {
+app.delete("/task/:id", async (req, res) => {
   // Logic to delete a task
   try {
     const deleted = await knex("in_processing_task")
