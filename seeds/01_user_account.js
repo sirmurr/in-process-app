@@ -8,7 +8,7 @@ exports.seed = async function(knex) {
   await knex('user_account').insert([
     {id: 1, isNewMember: true, isAppAdmin: false, isTaskAdmin: false, isLeadership: false, MemberName: 'John Doe', MemberEmail: 'john@example.com', isInProcessed: false},
     {id: 2, isNewMember: false, isAppAdmin: true, isTaskAdmin: false, isLeadership: false, MemberName: 'Jane Smith', MemberEmail: 'jane@example.com', isInProcessed: true},
-    {id: 3, isNewMember: true, isAppAdmin: false, isTaskAdmin: false, isLeadership: false, MemberName: 'John Doe', MemberEmail: 'john.doe@example.com', isInProcessed: false},
+    {id: 3, isNewMember: true, isAppAdmin: false, isTaskAdmin: false, isLeadership: false, MemberName: 'Jan Doe', MemberEmail: 'jan.doe@example.com', isInProcessed: false},
     {id: 4, isNewMember: false, isAppAdmin: false, isTaskAdmin: true, isLeadership: false, MemberName: 'Alice Johnson', MemberEmail: 'alice.johnson@example.com', isInProcessed: true},
     {id: 5, isNewMember: true, isAppAdmin: false, isTaskAdmin: false, isLeadership: false, MemberName: 'Michael Brown', MemberEmail: 'michael.brown@example.com', isInProcessed: false},
     {id: 6, isNewMember: false, isAppAdmin: false, isTaskAdmin: false, isLeadership: true, MemberName: 'Sarah Davis', MemberEmail: 'sarah.davis@example.com', isInProcessed: true},
