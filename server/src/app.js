@@ -24,12 +24,12 @@ app.post("/users", async (req, res) => {
     isAppAdmin,
     isTaskAdmin,
     isLeadership,
-    memberName,
-    memberEmail,
+    MemberName,
+    MemberEmail,
     isInProcessed,
   } = req.body;
 
-  if (!memberName || !memberEmail) {
+  if (!MemberName || !MemberEmail) {
     return res.status(400).send("Missing User Name or Email");
   }
   //ACTION add additional data validation
@@ -41,8 +41,8 @@ app.post("/users", async (req, res) => {
         isAppAdmin,
         isTaskAdmin,
         isLeadership,
-        memberName,
-        memberEmail,
+        MemberName,
+        MemberEmail,
         isInProcessed,
       })
       .returning("*");
@@ -86,8 +86,8 @@ app.put("/users/:id", async (req, res) => {
     isAppAdmin,
     isTaskAdmin,
     isLeadership,
-    memberName,
-    memberEmail,
+    MemberName,
+    MemberEmail,
     isInProcessed,
   } = req.body;
 
@@ -99,8 +99,8 @@ app.put("/users/:id", async (req, res) => {
         isAppAdmin,
         isTaskAdmin,
         isLeadership,
-        memberName,
-        memberEmail,
+        MemberName,
+        MemberEmail,
         isInProcessed,
       })
       .returning("*");
@@ -257,7 +257,7 @@ app.post("/assignments", async (req, res) => {
     const [newAssignment] = await knex("member_task_assignment")
       .insert({
         idUser,
-        isTask,
+        idTask,
         isComplete,
       })
       .returning("*");
