@@ -1,15 +1,15 @@
 const express = require("express");
 const knex = require("knex")(require("../knexfile").development);
-const server = express();
+const app = express();
 const port = 8081;
 
-server.use(express.json());
+app.use(express.json());
 
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-server.get("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Application up and running!");
 });
 
@@ -17,7 +17,7 @@ server.get("/", (req, res) => {
 //id, isNewMember, isAppAdmin, isTaskAdmin, isLeadership, Member Name, Member Email, isInProcessed
 
 // Create a User: POST /users
-server.post("/users", async (req, res) => {
+app.post("/users", async (req, res) => {
   //Logic to add a user
   const {
     isNewMember,
@@ -54,7 +54,7 @@ server.post("/users", async (req, res) => {
 });
 
 // Get All Users: GET /users
-server.get("/users", async (req, res) => {
+app.get("/users", async (req, res) => {
   // Logic to get all users
   try {
     const users = await knex("user_account").select("*");
@@ -65,7 +65,7 @@ server.get("/users", async (req, res) => {
 });
 
 // Get a Single User: GET /users/:id
-server.get("/users/:id", async (req, res) => {
+app.get("/users/:id", async (req, res) => {
   // Logic to get a single user
   try {
     const user = await knex("user_account").where("id", req.params.id).first();
@@ -79,7 +79,7 @@ server.get("/users/:id", async (req, res) => {
 });
 
 // Update a Book: PUT /users/:id
-server.put("/users/:id", async (req, res) => {
+app.put("/users/:id", async (req, res) => {
   // Logic to update a user
   const {
     isNewMember,
@@ -116,7 +116,7 @@ server.put("/users/:id", async (req, res) => {
 });
 
 // Delete a Book: DELETE /users/:id
-server.delete("/users/:id", async (req, res) => {
+app.delete("/users/:id", async (req, res) => {
   // Logic to delete a user
   try {
     const deleted = await knex("user_account").where("id", req.params.id).del();
