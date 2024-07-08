@@ -3,4 +3,4 @@ To start this program, in your terminal run the folowing command:  `docker-compo
 
 To test this, type: `docker ps -a`
 
-Then in a seperate terminal, type the following: `docker-compose exec db psql -U postgres -d accounts`
+Then in a seperate terminal, type the following in your project location: `docker-compose exec db psql -U postgres -d accounts`
