@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 //id, isNewMember, isAppAdmin, isTaskAdmin, isLeadership, Member Name, Member Email, isInProcessed
 
 // Create a User: POST /users
-app.post("/user_account", async (req, res) => {
+app.post("/users", async (req, res) => {
   //Logic to add a user
   const {
     isNewMember,
@@ -54,7 +54,7 @@ app.post("/user_account", async (req, res) => {
 });
 
 // Get All Users: GET /users
-app.get("/user_account", async (req, res) => {
+app.get("/users", async (req, res) => {
   // Logic to get all users
   try {
     const users = await knex("user_account").select("*");
@@ -65,7 +65,7 @@ app.get("/user_account", async (req, res) => {
 });
 
 // Get a Single User: GET /users/:id
-app.get("/user_account/:id", async (req, res) => {
+app.get("/users/:id", async (req, res) => {
   // Logic to get a single user
   try {
     const user = await knex("user_account").where("id", req.params.id).first();
@@ -79,7 +79,7 @@ app.get("/user_account/:id", async (req, res) => {
 });
 
 // Update a Book: PUT /users/:id
-app.put("/user_account/:id", async (req, res) => {
+app.put("/users/:id", async (req, res) => {
   // Logic to update a user
   const {
     isNewMember,
@@ -116,7 +116,7 @@ app.put("/user_account/:id", async (req, res) => {
 });
 
 // Delete a Book: DELETE /users/:id
-app.delete("/user_account/:id", async (req, res) => {
+app.delete("/users/:id", async (req, res) => {
   // Logic to delete a user
   try {
     const deleted = await knex("user_account").where("id", req.params.id).del();
