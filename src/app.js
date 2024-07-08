@@ -182,7 +182,9 @@ app.get("/in_processing_task", async (req, res) => {
 app.get("/in_processing_task/:id", async (req, res) => {
   // Logic to get a single task
   try {
-    const task = await knex("in_processing_task").where("id", req.params.id).first();
+    const task = await knex("in_processing_task")
+      .where("id", req.params.id)
+      .first();
     if (!task) {
       return res.status(404).send("User not found");
     }
@@ -223,7 +225,9 @@ app.put("/in_processing_task/:id", async (req, res) => {
 app.delete("/in_processing_task/:id", async (req, res) => {
   // Logic to delete a task
   try {
-    const deleted = await knex("in_processing_task").where("id", req.params.id).del();
+    const deleted = await knex("in_processing_task")
+      .where("id", req.params.id)
+      .del();
     if (!deleted) {
       return res.status(404).send("Task not found");
     }
@@ -233,11 +237,11 @@ app.delete("/in_processing_task/:id", async (req, res) => {
   }
 });
 
-/* JOINED Table UNDER  CONSTRUCTION ------------------------------------------------------------------------------------------------------
-//NEED TO KNEXIFY
-//// Joined task assignment table ////
+///// Joined task assignment table //// ------------------------------------------------------------------------------
 //id, idMember, idTask, isComplete
-app.post("/assignments", (req, res) => {
+
+// NEW needs testing
+app.post("/assignments", async (req, res) => {
   // Logic to create new assignment
   const { idUser, idTask } = req.body;
   const isComplete = false; //new assignment not complete by defualt
@@ -249,19 +253,84 @@ app.post("/assignments", (req, res) => {
   }
 
   // how to post to table NOT CONFIDENT in this one =>
+  try {
+    const [newAssignment] = await knex("member_task_assignment")
+      .insert({
+        idUser,
+        isTask,
+        isComplete,
+      })
+      .returning("*");
 
-  const newAssignment = {
-    id: assignments.length + 1,
-    idUser,
-    isTask,
-    isComplete,
-  };
-  tasks.push(newAssignment);
-  res.status(201).send(newAssignment);
+    res.status(201).send(newAssignment);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
-app.put("/assignments/:id", (req, res) => {
+// Put isComplete Assignment Flag: Put /assignments/:id
+app.put("/assignments/:id", async (req, res) => {
   //Logic to update the isComplete flag
+
+  const { isComplete } = req.body; // only takkes in Boolean to set flag as true vs false
+
+  try {
+    const updatedAssignment = await knex("member_task_assignment")
+      .where("id", req.params.id)
+      .update({
+        isComplete,
+      })
+      .returning("*");
+
+    if (!updatedAssignment.length) {
+      return res.status(404).send("Assignment not found");
+    }
+
+    res.json(updatedAssignment[0]);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
-//  - research this
-*/
+
+// Get All Assignments: GET /assignments
+app.get("/assignments", async (req, res) => {
+  // Logic to get all assignments
+  try {
+    const assignments = await knex("member_task_assignment").select("*");
+    res.json(assignments);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Get a Single assignment: GET /assignments/:id
+app.get("/assignments/:id", async (req, res) => {
+  // Logic to get a single assignment
+  try {
+    const assignment = await knex("member_task_assignment")
+      .where("id", req.params.id)
+      .first();
+    if (!assignment) {
+      return res.status(404).send("Assignment not found");
+    }
+    res.json(assignment);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Delete a assignment: DELETE /assignments/:id
+app.delete("/assignments/:id", async (req, res) => {
+  // Logic to delete a assignment
+  try {
+    const deleted = await knex("member_task_assignment")
+      .where("id", req.params.id)
+      .del();
+    if (!deleted) {
+      return res.status(404).send("Assignment not found");
+    }
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
