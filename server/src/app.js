@@ -1,9 +1,11 @@
 const express = require("express");
 const knex = require("knex")(require("../knexfile").development);
 const app = express();
+const cors = require('cors');
 const port = 8081;
 //test
 app.use(express.json());
+app.use(cors());
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
