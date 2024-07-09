@@ -15,7 +15,13 @@ https://prezi.com/view/HYg7LPkcqZdhVjVcISnF/
 
 This web application will bring squadrons out of paper process in-processing techniques with a digital new-user tracking and task manegment system. The sq's front office support staff will have admin roles, who can create/edit/delete/assign in-processing events to new members. New members will view the application as a list of to-do items with actions required, contact names from actions and a completion status. relevant sq leadership will have view privileges.
 
+## Images
 
+### ERD
 https://github.com/sirmurr/in-process-app/blob/main/references/in-process%20ERD%20v2.png
+
+### Wireframes
 https://github.com/sirmurr/in-process-app/blob/main/references/wireframes.doc
+
+### Third
 https://github.com/sirmurr/in-process-app/blob/main/references/image_720.png
