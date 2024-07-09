@@ -1,12 +1,12 @@
-import React, { useState, useNavigate } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [users, setUsers] = useState([]);
-  const [userId, setUserId] = useState('');
+  const [selectedUserId, setSelectedUserId] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  useEffect(() => {
     fetch('http://127.0.0.1:8081/users', {
       method: 'GET',
       headers: {
@@ -14,29 +14,43 @@ function Login() {
       }
     })
       .then(response => response.json())
-      .then(data => {
-        setUsers(data);
-      })
+      .then(data => setUsers(data))
       .catch(error => console.error('Error:', error));
-    if (users.isAdmin) {
-      navigate('/appadmin');
-    } else if (users.isTaskAdmin) {
-      setUserId(users.id);
-      navigate('/taskadmin/:id');
-    } else if (users.isLeadership) {
-      navigate('/leadership');
+  }, []);
+
+  const handleLogin = () => {
+    console.log('Selected User ID:', selectedUserId); // Debugging step
+    const selectedUser = users.find(user => user.id.toString() === selectedUserId);
+
+    if (selectedUser) {
+      console.log('Selected User:', selectedUser); // Debugging step
+      if (selectedUser.isAdmin) {
+        navigate('/appadmin');
+      } else if (selectedUser.isTaskAdmin) {
+        navigate(`/taskadmin/${selectedUser.id}`);
+      } else if (selectedUser.isLeadership) {
+        navigate('/leadership');
+      } else {
+        navigate(`/newmember/${selectedUser.id}`);
+      }
     } else {
-      setUserId(users.id);
-      navigate('/newmember/:id');
+      console.error('User not found');
     }
-  }
+  };
 
   return (
     <>
       <h1 className="Login-Screen">Login Splash Page</h1>
       <p>Select A User Profile</p>
-      <select onClick={handleLogin} value={users && users.map(user => <p id="users" key={user.id}>  <img src='https://static.thenounproject.com/png/3874124-200.png' alt='user' /> {user.MemberName}</p>)} onChange={(e) => setUserId(e.target.value)}>
+      <select value={selectedUserId} onChange={(e) => setSelectedUserId(e.target.value)}>
+        <option value="">Select User</option>
+        {users.map(user => (
+          <option key={user.id} value={user.id}>
+            {user.MemberName}
+          </option>
+        ))}
       </select>
+      <button onClick={handleLogin}>Login</button>
     </>
   );
 }
