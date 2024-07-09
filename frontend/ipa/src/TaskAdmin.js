@@ -2,8 +2,19 @@ import React from "react";
 
 export default function TaskAdmin({ match }) {
   const [newMembers, setNewMembers] = React.useState([]);
+  const [task, setTask] = React.useState({});
 
   React.useEffect(() => {
+    fetch(`http://127.0.0.1:8081/tasks/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => setTask(data.filter(task => task.params.id)))
+      .catch(error => console.error('Error:', error));
+
     fetch(`http://127.0.0.1:8081/users/`, {
       method: 'GET',
       headers: {
