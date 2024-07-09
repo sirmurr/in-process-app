@@ -23,5 +23,5 @@ https://github.com/sirmurr/in-process-app/blob/main/references/in-process%20ERD%
 ### Wireframes
 https://github.com/sirmurr/in-process-app/blob/main/references/wireframes.doc
 
-### Third
+### User Stories and MVP
 https://github.com/sirmurr/in-process-app/blob/main/references/image_720.png
